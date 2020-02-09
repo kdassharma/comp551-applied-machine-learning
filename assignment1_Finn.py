@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[82]:
 
 
 import pandas as pd
@@ -20,7 +20,7 @@ import csv
 #     - First we must acquire, preprocess, and analyze the data
 # </body>
 
-# In[2]:
+# In[83]:
 
 
 # Reading dataset into a dataframe
@@ -47,22 +47,20 @@ DataFrame['car-name'] = DataFrame['car-name'].apply(lambda x: x.split()[0])
 DataFrame.head(10)
 
 
-# In[3]:
+# In[84]:
 
 
-#Our data is clean and ready to use! Let's analyze it a bit
-DataFrame.describe()
+# However, we have 4 continuous features, which must be coverted to discrete to use naive bayes
+# I will do this by assigning quartiles with a value of 1, 2, 3, or 4
+bin_labels = [1.0, 2.0, 3.0, 4.0]
+DataFrame['displacement'] = pd.qcut(DataFrame['displacement'],q=4,labels=False)
+DataFrame['horsepower'] = pd.qcut(DataFrame['horsepower'],q=4,labels=False)
+DataFrame['weight'] = pd.qcut(DataFrame['weight'],q=4,labels=False)
+DataFrame['acceleration'] = pd.qcut(DataFrame['acceleration'],q=4,labels=False)
+DataFrame.head(50)
 
 
-# In[4]:
-
-
-# An interesting observation, displacement is not very nicely distributed (also what is it??)
-# Also, this leaves out the car name, I'm curious what the most popular brand is and what not (ford)
-DataFrame["car-name"].describe()
-
-
-# In[5]:
+# In[85]:
 
 
 # Now lets look at some graphs, I'm curious how some of the feautures plot against MPG
@@ -71,13 +69,12 @@ DataFrame["car-name"].describe()
 # From a quick glance, these might be logistic rather than linear realtions
 DataFrame.plot(kind='scatter',x='displacement',y='mpg',color='red')
 DataFrame.plot(kind='scatter',x='horsepower',y='mpg',color='blue')
-DataFrame.plot(kind='scatter',x='displacement',y='mpg',color='green')
 DataFrame.plot(kind='scatter',x='weight',y='mpg',color='orange')
 DataFrame.plot(kind='scatter',x='acceleration',y='mpg',color='cyan')
 plt.show()
 
 
-# In[6]:
+# In[86]:
 
 
 # Now I would like to look at the discrete variables
@@ -89,7 +86,7 @@ plt.xticks(rotation=90)
 plt.show()
 
 
-# In[7]:
+# In[87]:
 
 
 # Finally, since the goal is linear classification, we must transform the dependent varible(MPG) into
@@ -103,23 +100,29 @@ DataFrame['mpg'].describe()
 
 # 
 
-# In[8]:
+# In[88]:
 
 
 # lets see if the features are correlated
 
 
-# In[9]:
+# In[89]:
 
 
 corr = DataFrame.corr()
 sns.heatmap(corr)
 
 
-# In[ ]:
+# In[90]:
 
 
+DataFrame.head(10)
 
+
+# In[94]:
+
+
+DataFrame.describe()
 
 
 # In[ ]:
