@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[82]:
+# In[ ]:
 
 
 import pandas as pd
@@ -20,7 +20,7 @@ import csv
 #     - First we must acquire, preprocess, and analyze the data
 # </body>
 
-# In[83]:
+# In[ ]:
 
 
 # Reading dataset into a dataframe
@@ -39,15 +39,14 @@ DataFrame =DataFrame.astype({'horsepower': float})
 
 
 # However, now we see that car name is kind of a useless value as they all are different models.
-# We will parse it so it is only the car brand, making it a multi-valued discrete feature
-DataFrame['car-name'] = DataFrame['car-name'].apply(lambda x: x.split()[0])
-
+# We will just drop it
+DataFrame.drop(['car-name'] , inplace=True, axis = 1)
 
 # Now we display the first few rows, looks good!
 DataFrame.head(10)
 
 
-# In[84]:
+# In[ ]:
 
 
 # However, we have 4 continuous features, which must be coverted to discrete to use naive bayes
@@ -57,72 +56,59 @@ DataFrame['displacement'] = pd.qcut(DataFrame['displacement'],q=4,labels=False)
 DataFrame['horsepower'] = pd.qcut(DataFrame['horsepower'],q=4,labels=False)
 DataFrame['weight'] = pd.qcut(DataFrame['weight'],q=4,labels=False)
 DataFrame['acceleration'] = pd.qcut(DataFrame['acceleration'],q=4,labels=False)
-DataFrame.head(50)
+DataFrame.head(10)
 
 
-# In[85]:
-
-
-# Now lets look at some graphs, I'm curious how some of the feautures plot against MPG
-# First lets plot the continuos variables, they all have pretty clear trends, although acceleration
-# is slightly less clear
-# From a quick glance, these might be logistic rather than linear realtions
-DataFrame.plot(kind='scatter',x='displacement',y='mpg',color='red')
-DataFrame.plot(kind='scatter',x='horsepower',y='mpg',color='blue')
-DataFrame.plot(kind='scatter',x='weight',y='mpg',color='orange')
-DataFrame.plot(kind='scatter',x='acceleration',y='mpg',color='cyan')
-plt.show()
-
-
-# In[86]:
-
-
-# Now I would like to look at the discrete variables
-DataFrame.plot(kind='scatter',x='cylinders',y='mpg',color='red')
-DataFrame.plot(kind='scatter',x='model-year',y='mpg',color='blue')
-DataFrame.plot(kind='scatter',x='origin',y='mpg',color='orange')
-DataFrame.plot(kind='scatter',x='car-name',y='mpg',color='green',figsize=(12,4))
-plt.xticks(rotation=90)
-plt.show()
-
-
-# In[87]:
+# In[ ]:
 
 
 # Finally, since the goal is linear classification, we must transform the dependent varible(MPG) into
 # a binary choice. I will transform it into high(1) gas mileage or low(0) gas mileage, depending on whether it
 # is above or below the mean value of 23.44
 DataFrame['mpg'] = DataFrame['mpg'].apply(lambda x: 1 if (x >= 23.445918) else 0)
-# As is shows below, the mean is very close to 0.5, so there is a realtively even split between low an high gas
-# mileage
-DataFrame['mpg'].describe()
+DataFrame.head(10)
 
 
 # 
 
-# In[88]:
+# In[ ]:
 
 
 # lets see if the features are correlated
 
 
-# In[89]:
+# In[ ]:
 
 
 corr = DataFrame.corr()
 sns.heatmap(corr)
 
 
-# In[90]:
+# In[ ]:
 
 
+# yes, we can see cylinders, horsepower, displacement, and weight are all very correlated,
+# so I will drop 3 of the 4 since they are redundant (from my testing this greatly increased accuracy)
+DataFrame.drop(['cylinders', 'horsepower', 'displacement'] , inplace=True, axis = 1)
 DataFrame.head(10)
 
 
-# In[94]:
+# In[ ]:
 
 
-DataFrame.describe()
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
 
 
 # In[ ]:
