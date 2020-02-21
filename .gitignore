@@ -1,3 +1,6 @@
 
 .DS_Store
 *.pyc
+*.ipynb
+*.ipynb
+.ipynb_checkpoints/assignment1_Kaustav-checkpoint.ipynb
